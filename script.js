@@ -1,42 +1,79 @@
 const chords = [
-  ["c", "C"],
-  ["c7", "C7"],
-  ["c-minor", "Cm"],
-  ["c-minor7", "Cm7"],
-  ["c-major7", "CM7"],
-  ["d", "D"],
-  ["d7", "D7"],
-  ["d-minor", "Dm"],
-  ["d-minor7", "Dm7"],
-  ["d-major7", "DM7"],
-  ["e", "E"],
-  ["e7", "E7"],
-  ["e-minor", "Em"],
-  ["e-minor7", "Em7"],
-  ["e-major7", "EM7"],
-  ["f", "F"],
-  ["f7", "F7"],
-  ["f-minor", "Fm"],
-  ["f-minor7", "Fm7"],
-  ["f-major7", "FM7"],
-  ["g", "G"],
-  ["g7", "G7"],
-  ["g-minor", "Gm"],
-  ["g-minor7", "Gm7"],
-  ["g-major7", "GM7"],
-  ["a", "A"],
-  ["a7", "A7"],
-  ["a-minor", "Am"],
-  ["a-minor7", "Am7"],
-  ["a-major7", "AM7"],
-  ["b", "B"],
-  ["b7", "B7"],
-  ["b-minor", "Bm"],
-  ["b-minor7", "Bm7"],
-  ["b-major7", "BM7"],
+  ["C", "C"],
+  ["C7", "C7"],
+  ["C-MINOR", "Cm"],
+  ["C-MINOR7", "Cm7"],
+  ["C-MAJOR7", "CM7"],
+  ["D", "D"],
+  ["D7", "D7"],
+  ["D-MINOR", "Dm"],
+  ["D-MINOR7", "Dm7"],
+  ["D-MAJOR7", "DM7"],
+  ["E", "E"],
+  ["E7", "E7"],
+  ["E-MINOR", "Em"],
+  ["E-MINOR7", "Em7"],
+  ["E-MAJOR7", "EM7"],
+  ["F", "F"],
+  ["F7", "F7"],
+  ["F-MINOR", "Fm"],
+  ["F-MINOR7", "Fm7"],
+  ["F-MAJOR7", "FM7"],
+  ["G", "G"],
+  ["G7", "G7"],
+  ["G-MINOR", "Gm"],
+  ["G-MINOR7", "Gm7"],
+  ["G-MAJOR7", "GM7"],
+  ["A", "A"],
+  ["A7", "A7"],
+  ["A-MINOR", "Am"],
+  ["A-MINOR7", "Am7"],
+  ["A-MAJOR7", "AM7"],
+  ["B", "B"],
+  ["B7", "B7"],
+  ["B-MINOR", "Bm"],
+  ["B-MINOR7", "Bm7"],
+  ["B-MAJOR7", "BM7"],
 ];
 
 const storageKey = "guitarChordSets";
+const legacyChordIds = {
+  "a": "A",
+  "a7": "A7",
+  "a-major7": "A-MAJOR7",
+  "a-minor": "A-MINOR",
+  "a-minor7": "A-MINOR7",
+  "b": "B",
+  "b7": "B7",
+  "b-major7": "B-MAJOR7",
+  "b-minor": "B-MINOR",
+  "b-minor7": "B-MINOR7",
+  "c": "C",
+  "c7": "C7",
+  "c-major7": "C-MAJOR7",
+  "c-minor": "C-MINOR",
+  "c-minor7": "C-MINOR7",
+  "d": "D",
+  "d7": "D7",
+  "d-major7": "D-MAJOR7",
+  "d-minor": "D-MINOR",
+  "d-minor7": "D-MINOR7",
+  "e": "E",
+  "e7": "E7",
+  "e-major7": "E-MAJOR7",
+  "e-minor": "E-MINOR",
+  "e-minor7": "E-MINOR7",
+  "f": "F",
+  "f7": "F7",
+  "f-major7": "F-MAJOR7",
+  "f-minor": "F-MINOR",
+  "f-minor7": "F-MINOR7",
+  "g": "G",
+  "g7": "G7",
+  "g-major7": "G-MAJOR7",
+  "g-minor": "G-MINOR",
+  "g-minor7": "G-MINOR7",
+};
 const menuButton = document.querySelector("[data-menu-button]");
 const menuPanel = document.querySelector("[data-menu-panel], .menu-panel");
 const menuBackdrop = document.querySelector("[data-menu-backdrop]");
@@ -62,6 +99,7 @@ const emptyState = document.querySelector("[data-empty-state]");
 
 let selectedChords = [];
 let savedSets = loadSets();
+saveSets();
 
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, (char) => {
@@ -79,10 +117,20 @@ function escapeHtml(value) {
 
 function loadSets() {
   try {
-    return JSON.parse(localStorage.getItem(storageKey)) ?? [];
+    return migrateSets(JSON.parse(localStorage.getItem(storageKey)) ?? []);
   } catch {
     return [];
   }
+}
+
+function migrateSets(sets) {
+  return sets.map((set) => ({
+    ...set,
+    chords: set.chords.map((chord) => ({
+      ...chord,
+      id: legacyChordIds[chord.id] ?? chord.id,
+    })),
+  }));
 }
 
 function saveSets() {
