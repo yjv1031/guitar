@@ -19,7 +19,14 @@
       </a>
 
       <div class="header-actions">
-        <button class="menu-button" type="button" aria-label="메뉴 열기">
+        <button
+          class="menu-button"
+          type="button"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="menu-panel"
+          data-menu-button
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -28,12 +35,109 @@
     </header>
 
     <main class="practice-screen">
-      <figure class="chord-chart">
-        <img
-          src="assets/chord-chart.jpg"
-          alt="필수 기타 코드표"
-        />
-      </figure>
+      <section class="screen is-active" data-screen="chart">
+        <figure class="chord-chart">
+          <img
+            src="assets/chord-chart.jpg"
+            alt="필수 기타 코드표"
+          />
+        </figure>
+      </section>
+
+      <section class="screen chord-set-screen" data-screen="sets">
+        <div class="screen-header">
+          <div>
+            <h1>코드세트 연습</h1>
+            <p>4개 코드로 묶어서 반복 연습</p>
+          </div>
+          <button class="add-set-button" type="button" data-open-set-modal>
+            등록
+          </button>
+        </div>
+
+        <section class="saved-sets" aria-label="등록된 코드세트">
+          <h2>등록한 세트</h2>
+          <div class="empty-state" data-empty-state>아직 등록한 코드세트가 없습니다.</div>
+          <div class="set-list" data-set-list></div>
+        </section>
+      </section>
     </main>
+
+    <div class="menu-backdrop" data-menu-backdrop></div>
+    <aside class="menu-panel" id="menu-panel" aria-hidden="true">
+      <div class="panel-header">
+        <div>
+          <h2>메뉴</h2>
+          <p>연습 화면 선택</p>
+        </div>
+        <button class="close-button" type="button" aria-label="메뉴 닫기" data-close-menu>
+          &times;
+        </button>
+      </div>
+
+      <nav class="app-menu" aria-label="앱 메뉴">
+        <button class="menu-item is-active" type="button" data-screen-target="chart">
+          코드표
+        </button>
+        <button class="menu-item" type="button" data-screen-target="sets">
+          코드세트 연습
+        </button>
+      </nav>
+    </aside>
+
+    <div class="modal-backdrop" data-modal-backdrop></div>
+    <section class="set-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="set-modal-title">
+      <div class="modal-header">
+        <div>
+          <h2 id="set-modal-title">코드세트 등록</h2>
+          <p>코드 4개를 선택하세요.</p>
+        </div>
+        <button class="close-button" type="button" aria-label="등록 팝업 닫기" data-close-set-modal>
+          &times;
+        </button>
+      </div>
+
+      <div class="set-builder" aria-label="코드세트 등록">
+        <label class="set-name-field">
+          <span>세트 이름</span>
+          <input
+            type="text"
+            maxlength="24"
+            placeholder="예: 오늘의 4코드"
+            data-set-name
+          />
+        </label>
+
+        <div class="builder-status">
+          <strong data-selected-count>0</strong>
+          <span>/ 4 선택</span>
+        </div>
+
+        <div class="selected-slots" data-selected-slots></div>
+
+        <div class="chord-picker" data-chord-picker></div>
+
+        <button class="save-set-button" type="button" disabled data-save-set>
+          세트 등록
+        </button>
+      </div>
+    </section>
+
+    <div class="view-backdrop" data-view-backdrop></div>
+    <section class="view-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="view-modal-title">
+      <div class="modal-header">
+        <div>
+          <h2 id="view-modal-title" data-view-title>코드세트</h2>
+          <p>2x2 코드 연습</p>
+        </div>
+        <button class="close-button" type="button" aria-label="코드세트 팝업 닫기" data-close-view-modal>
+          &times;
+        </button>
+      </div>
+
+      <div class="practice-grid" data-view-grid></div>
+    </section>
+
+    <script src="script.js"></script>
   </body>
 </html>
